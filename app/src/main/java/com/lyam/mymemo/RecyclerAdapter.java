@@ -60,8 +60,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.mViewH
                             @Override
                             public void onClick(View v) {
                                 String memo = memoText.getText().toString();
-                                helper.updateMemo(memo, items.get(getAdapterPosition()));
-                                items.set(getAdapterPosition(), memo);
+                                int pos = getAdapterPosition();
+                                System.out.println("내용은 " + memo + "어댑터포지션은 "+ pos);
+                                helper.updateMemo(memo, items.get(pos));
+                                items.set(pos, memo);
                                 notifyDataSetChanged();
                                 dialog.dismiss();
                             }
@@ -75,16 +77,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.mViewH
                         dialog.show();
                         break;
                     case 2:
-                        items.remove(getAdapterPosition());
-                        helper.deleteMemo(items.get(getAdapterPosition()));
-                        notifyItemRemoved(getAdapterPosition());
-                        notifyItemRangeChanged(getAdapterPosition(), items.size());
+                        int pos = getAdapterPosition();
+                        String memo = items.get(pos);
+                        items.remove(pos);
+                        helper.deleteMemo(memo);
+                        notifyItemRemoved(pos);
+                        notifyItemRangeChanged(pos, items.size());
                         break;
                 }
                 return true;
             }
         };
     }
+    /*
+    int adapterPos = getAdapterPosition();
+    if(adapterPos != RecyclerView.NO_POSITION){...}
+     */
 
     public RecyclerAdapter(ArrayList<String> items, Context context) {
         this.items = items;
@@ -95,9 +103,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.mViewH
     @NonNull
     @Override
     public mViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         RecyclerAdapter.mViewHolder holder = new RecyclerAdapter.mViewHolder(view);
         return holder;
     }

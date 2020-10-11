@@ -57,12 +57,14 @@ public class SQLdbHelper extends SQLiteOpenHelper {
         return db.insert(FeedContract.FeedEntry.TABLE_NAME, null, values);
     }
     public void deleteMemo(String data){
+        System.out.println("삭제하기 " + data);
         long id = getID_fromData(data);
         db.delete(FeedContract.FeedEntry.TABLE_NAME, FeedContract.FeedEntry.COLUMN_MEMO+"=? and "
                 + FeedContract.FeedEntry._ID + "=?", new String[]{data,String.valueOf(id)});
         Toast.makeText(context, "삭제되었습니다!", Toast.LENGTH_SHORT).show();
     }
     public void updateMemo(String new_memo, String old_memo){
+        System.out.println("수정하기 " + old_memo + " -> " + new_memo);
         long id = getID_fromData(old_memo);
         ContentValues values = new ContentValues();
         values.put(FeedContract.FeedEntry.COLUMN_MEMO, new_memo);
@@ -72,11 +74,16 @@ public class SQLdbHelper extends SQLiteOpenHelper {
     }
 
     public long getID_fromData(String data){
-        System.out.println("내용: " + data);
-        Cursor cursor = db.query(FeedContract.FeedEntry.TABLE_NAME, new String[]{BaseColumns._ID}, FeedContract.FeedEntry.COLUMN_MEMO + " =? ", new String[]{data}, null, null, null);
-
-        long id = cursor.getColumnIndex(FeedContract.FeedEntry._ID);
-        System.out.println(data + "의 id는 " + id);
+        System.out.println("삭제 또는 수정할 내용은: " + data);
+        Cursor cursor = db.query(FeedContract.FeedEntry.TABLE_NAME, new String[]{FeedContract.FeedEntry._ID}, FeedContract.FeedEntry.COLUMN_MEMO + "=?", new String[]{String.valueOf(data)}, null, null, null);
+        long id = 0;
+        //Cursor cursor = db.query(FeedContract.FeedEntry.TABLE_NAME, new String[]{BaseColumns._ID}, FeedContract.FeedEntry.COLUMN_MEMO + " =? ", new String[]{data}, null, null, null);
+        while (cursor.moveToNext()){
+            int column = cursor.getColumnIndex(FeedContract.FeedEntry._ID);
+            id = cursor.getLong(column);
+            System.out.println(data + " 의 id는 " + id );
+        }
+       // long id = cursor.getColumnIndex(FeedContract.FeedEntry._ID);
         cursor.close();
         return id;
     }

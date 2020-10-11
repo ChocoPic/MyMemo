@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> items;
     private RecyclerAdapter adapter;
     private SQLdbHelper helper;
-    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +44,14 @@ public class MainActivity extends AppCompatActivity {
         helper = new SQLdbHelper(this);
         newMemo_layout.setVisibility(View.GONE);
 
+        items = new ArrayList<>();
         items = loadDataList();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layout = new LinearLayoutManager(this);
+        layout.setReverseLayout(true);
+        layout.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layout);
+
         adapter = new RecyclerAdapter(items, this);
         recyclerView.setAdapter(adapter);
 
@@ -64,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String memo = newMemoText.getText().toString();
                 helper.insertMemo(memo);
-                items.add(0,memo);  //첫번째에 삽입
-                adapter.notifyItemInserted(0);  //첫번째에 삽입
+                items.add(memo);  //첫번째에 삽입
+                adapter.notifyItemInserted(items.size()-1);  //첫번째에 삽입
                 newMemo_layout.setVisibility(View.GONE);
             }
         });
@@ -85,12 +89,15 @@ public class MainActivity extends AppCompatActivity {
     //읽어오기
     public ArrayList<String> loadDataList() {
         ArrayList<String> memos = new ArrayList<>();;
+        int cnt = 0;
         try {
             helper = new SQLdbHelper(MainActivity.this);
             Cursor c = helper.getAllData();
             if (c.moveToFirst()) {
                 do {
                     memos.add(c.getString(1));
+                    System.out.println(cnt + " 번째: " + memos.get(cnt));
+                    cnt++;
                 } while (c.moveToNext());
             }
             c.close();
