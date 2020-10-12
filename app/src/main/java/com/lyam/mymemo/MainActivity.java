@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText newMemoText;
     private LinearLayout newMemo_layout;
     private RecyclerView recyclerView;
-    private ArrayList<String> items;
+    private ArrayList<MyMemo> items;
     private RecyclerAdapter adapter;
     private SQLdbHelper helper;
 
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         items = loadDataList();
 
         LinearLayoutManager layout = new LinearLayoutManager(this);
-        layout.setReverseLayout(true);
-        layout.setStackFromEnd(true);
+        layout.setReverseLayout(true);  //역순
+        layout.setStackFromEnd(true);   //역순
         recyclerView.setLayoutManager(layout);
 
         adapter = new RecyclerAdapter(items, this);
@@ -67,8 +67,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String memo = newMemoText.getText().toString();
+                MyMemo myMemo = new MyMemo(memo);
                 helper.insertMemo(memo);
-                items.add(memo);  //첫번째에 삽입
+                items.add(myMemo);  //첫번째에 삽입
                 adapter.notifyItemInserted(items.size()-1);  //첫번째에 삽입
                 newMemo_layout.setVisibility(View.GONE);
             }
@@ -87,16 +88,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //읽어오기
-    public ArrayList<String> loadDataList() {
-        ArrayList<String> memos = new ArrayList<>();;
+    public ArrayList<MyMemo> loadDataList() {
+        ArrayList<MyMemo> memos = new ArrayList<>();;
         int cnt = 0;
         try {
             helper = new SQLdbHelper(MainActivity.this);
             Cursor c = helper.getAllData();
             if (c.moveToFirst()) {
                 do {
-                    memos.add(c.getString(1));
-                    System.out.println(cnt + " 번째: " + memos.get(cnt));
+                    String data = c.getString(1);
+                    int color = c.getInt(2);
+                    memos.add(new MyMemo(data, color));
+                    System.out.println(cnt + " 번째: " + memos.get(cnt).getData() + " 색 " + memos.get(cnt).getColor());
                     cnt++;
                 } while (c.moveToNext());
             }
