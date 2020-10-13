@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,13 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private Button newBtn, saveBtn;
+    private Button newBtn, saveBtn, closeBtn, colorPicker;
     private EditText newMemoText;
     private LinearLayout newMemo_layout;
     private RecyclerView recyclerView;
     private ArrayList<MyMemo> items;
     private RecyclerAdapter adapter;
     private SQLdbHelper helper;
+    private int color;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.memo_list);
         newBtn = findViewById(R.id.newBtn);
         saveBtn = findViewById(R.id.saveBtn);
+        closeBtn = findViewById(R.id.closeBtn);
         newMemoText = findViewById(R.id.memoText);
+        colorPicker = findViewById(R.id.colorPicker);
 
         helper = new SQLdbHelper(this);
         newMemo_layout.setVisibility(View.GONE);
@@ -63,14 +67,34 @@ public class MainActivity extends AppCompatActivity {
                 newMemoText.setText("");
             }
         });
+        colorPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //컬러피커띄우기
+                ColorPicker colorPicker = new ColorPicker(MainActivity.this, new ColorPicker.DialogListener() {
+                    @Override
+                    public void Listener(int colorValue) {
+                        color = colorValue;
+                    }
+                });
+                colorPicker.callDialog();
+            }
+        });
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String memo = newMemoText.getText().toString();
-                MyMemo myMemo = new MyMemo(memo);
-                helper.insertMemo(memo);
+                MyMemo myMemo = new MyMemo(memo, color);
+                helper.insertMemo(memo, color);
                 items.add(myMemo);  //첫번째에 삽입
                 adapter.notifyItemInserted(items.size()-1);  //첫번째에 삽입
+                newMemo_layout.setVisibility(View.GONE);
+
+            }
+        });
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 newMemo_layout.setVisibility(View.GONE);
             }
         });

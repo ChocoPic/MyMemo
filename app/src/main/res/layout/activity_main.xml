@@ -2,37 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#69C9D5"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00BCD4"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#0069C9D5"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="8"
+            android:gravity="left|center_vertical"
             android:text="메모"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/newBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
             android:layout_gravity="right|center_vertical"
-            android:background="@android:drawable/ic_menu_add"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
             android:gravity="center|center_horizontal|center_vertical"
-            android:textColor="#000000"
-            android:textSize="20sp" />
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
 
     </LinearLayout>
 
@@ -40,6 +47,7 @@
         android:id="@+id/new_memo_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#FFFFFF"
         android:orientation="vertical">
 
         <EditText
@@ -57,22 +65,42 @@
             android:inputType="textMultiLine"
             android:textColorHint="#858585" />
 
-        <Button
-            android:id="@+id/saveBtn"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:text="저장" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/colorPicker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/color_picker_btn" />
+
+            <Button
+                android:id="@+id/closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="닫기" />
+
+            <Button
+                android:id="@+id/saveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:text="저장" />
+
+        </LinearLayout>
 
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="#00BCD4" />
+            android:background="#2CBBCD" />
 
     </LinearLayout>
 

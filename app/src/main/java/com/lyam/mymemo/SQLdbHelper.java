@@ -46,10 +46,10 @@ public class SQLdbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertMemo(String data) {
+    public long insertMemo(String data, int color) {
         ContentValues values = new ContentValues();
         values.put(FeedContract.FeedEntry.COLUMN_MEMO, data);
-        values.put(FeedContract.FeedEntry.COLOR_CODE, R.color.myGray);
+        values.put(FeedContract.FeedEntry.COLOR_CODE, color);
         Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show();
         return db.insert(FeedContract.FeedEntry.TABLE_NAME, null, values);
     }
