@@ -19,19 +19,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
             android:layout_weight="8"
-            android:gravity="left|center_vertical"
+            android:gravity="center|left"
             android:text="메모"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/newBtn"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="5dp"
             android:layout_weight="1"

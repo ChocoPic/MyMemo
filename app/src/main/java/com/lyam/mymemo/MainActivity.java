@@ -1,20 +1,17 @@
 package com.lyam.mymemo;
 
-import android.content.ContentValues;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,12 +27,17 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<MyMemo> items;
     private RecyclerAdapter adapter;
     private SQLdbHelper helper;
-    private int color;
+    private int color = R.color.myGray;
+
+    public SharedPreferences pref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        pref = getSharedPreferences("Pref", MODE_PRIVATE);
+        checkFirstRun();
 
         newMemo_layout = findViewById(R.id.new_memo_layout);
         recyclerView = findViewById(R.id.memo_list);
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 items.add(myMemo);  //첫번째에 삽입
                 adapter.notifyItemInserted(items.size()-1);  //첫번째에 삽입
                 newMemo_layout.setVisibility(View.GONE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(),0);
 
             }
         });
@@ -132,5 +136,23 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return memos;
+    }
+
+    public void checkFirstRun(){
+        boolean isFirstRun = pref.getBoolean("isFirstRun", true);
+        if(isFirstRun){
+            ImageView image = new ImageView(this);
+            image.setImageResource(R.drawable.guide_image);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                    .setNegativeButton("다시 보지 않기", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).
+                    setView(image);
+            builder.create().show();
+            pref.edit().putBoolean("isFirstRun", false).apply();
+        }
     }
 }
